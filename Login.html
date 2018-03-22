@@ -1,0 +1,124 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <script src="Scripts/jquery-3.3.1.min.js"></script>
+    <script src="Scripts/sha256.js"></script>
+    <script src="scripts/jquery.cookie.js"></script>
+    <script type="text/javascript">
+        
+
+    </script>
+    <script>
+        $(document).ready(function () {
+
+             $('#btnLogin').click(function () {
+                 var nick = $('#txtNick').val();
+                 var password = $('#txtPassword').val();
+
+                 if (nick != '' && password != '') {
+                     if (checkPassword(password)) {
+                         FuncCook(nick, password);
+                         MiFuncionLogin(nick, password);
+                        
+                     } else { alert('Su contraseña no cumple nada')}
+                 }
+                 else {
+                     alert('Proporcione Nick y Password')
+                 }
+             });
+        });
+
+        function FuncCook(nick, password) {
+            alert('Entra')
+            sha256(password);
+            var hashPwd = sha256.create();
+            var objJson = {
+                "Nick": nick,
+                "Password": hashPwd.hex()
+                //"Password": password
+            }
+            var stringJson = JSON.stringify(objJson)
+            
+            $.cookie('Micookie', stringJson, { expires: 7 });
+            alert('Valor de la cookie =>' + $.cookie('Micookie'))
+        }
+
+        function LeerCookie() {
+            if ($.cookie('Micookie') != null || $.cookie('Micookie') != '') {
+                var objCook = JSON.parse($.cookie('Micookie'));
+                $('#txtNick').val(objCook.Nick) ;
+            }
+        }
+
+         function MiFuncionWS() {
+             $.ajax({
+                 url: "WSLogin.asmx/HelloWorld",
+                 data: " ",
+                 dataType: "json",
+                 type: "POST",
+                 contentType: "application/json; utf-8",
+                 success: function (msg) {
+                     alert(msg.data)
+                 },
+                 error: function (result) {
+                     alert("ERROR " + result.status + ' ' + result.statusText);
+                 }
+             });
+        };
+
+            function MiFuncionLogin(nick, password) {
+            
+                sha256(password);
+                var hashPwd = sha256.create();
+
+                var objJson = {
+                    "Nick": nick,
+                    "Password": hashPwd.hex()
+                    //"Password": password
+                }
+            var stringJson = JSON.stringify(objJson)
+            //alert(stringJson);
+
+            $.ajax({
+                url: "WSLogin.asmx/Login",
+                data: "{'user':" + stringJson + "}",
+                dataType: "json",
+                type: "POST",
+                contentType: "application/json; utf-8",
+                success: function (msg) {
+                    if (msg.d.Id > 0) {
+                        window.location.href = "Bienvenido.aspx";
+                    } else {
+                        alert('No existe usuario!!!');
+                    }
+                    //alert(msg.d.Name)
+                },
+                error: function (result) {
+                    alert("ERROR " + result.status + ' ' + result.statusText);
+                }
+            });
+        }
+
+             function checkPassword(str) {
+                 var re = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z].{6,})/;
+                 return re.test(str);
+             }
+
+    </script>
+</head>
+<body onload="LeerCookie()">
+    <!--<input type="button" id="btnPrueba" value="Test WebService" />-->
+    <label>Nick:</label>
+    <input type="text" id="txtNick" />
+    <br />
+    <label>Password:</label>
+    <input type="password" id="txtPassword" />
+    <br />
+    <input type="button" id="btnLogin" value="Login" />
+    <br />
+    <a type="button" id="conect" href="Registrar.html">Crear cuenta</a>
+    
+</body>
+</html>
