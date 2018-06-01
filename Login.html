@@ -31,7 +31,6 @@
         });
 
         function FuncCook(nick, password) {
-            alert('Entra')
             sha256(password);
             var hashPwd = sha256.create();
             var objJson = {
@@ -69,13 +68,10 @@
         };
 
             function MiFuncionLogin(nick, password) {
-            
-                sha256(password);
-                var hashPwd = sha256.create();
-
+           
                 var objJson = {
                     "Nick": nick,
-                    "Password": hashPwd.hex()
+                    "Password": password
                     //"Password": password
                 }
             var stringJson = JSON.stringify(objJson)
@@ -89,7 +85,7 @@
                 contentType: "application/json; utf-8",
                 success: function (msg) {
                     if (msg.d.Id > 0) {
-                        window.location.href = "Bienvenido.aspx";
+                        window.location.href = "Busqueda.html";
                     } else {
                         alert('No existe usuario!!!');
                     }

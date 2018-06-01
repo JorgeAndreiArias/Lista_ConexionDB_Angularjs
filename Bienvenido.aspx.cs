@@ -13,7 +13,8 @@ public partial class Bienvenido : System.Web.UI.Page
         {
             try
             {
-                if (long.Parse(HttpContext.Current.Session["Identificador"].ToString()) > 0)
+                long p = long.Parse(HttpContext.Current.Session["Identificador"].ToString());
+                if ( p > 0)
                 {
                     Response.Write("Bienvenido");
                 }

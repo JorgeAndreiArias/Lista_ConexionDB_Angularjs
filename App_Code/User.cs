@@ -13,4 +13,5 @@ public class User
     public string LastName { get; set; }
     public string Nick { get; set; }
     public string Password { get; set; }
+    public string Img { get; set; }
 }

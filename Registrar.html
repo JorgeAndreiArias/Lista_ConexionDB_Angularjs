@@ -2,102 +2,10 @@
 <html>
 <head>
     <meta charset="utf-8" />
-    <title></title>
     <script src="Scripts/jquery-3.3.1.min.js"></script>
     <script src="Scripts/sha256.js"></script>
     <script src="Scripts/jquery.cookie.js"></script>
-    <script>
-        $(document).ready(function () {
-            $('#btnLogin').click(function () {
-                var Nombre = $('#txtName').val();
-                var Apellido = $('#txtLName').val();
-                var nick = $('#txtNick').val();
-                var Contrasena = $('#txtPassword').val();
-
-                if (Nombre != '' && Apellido != '' && nick != '' && Contrasena != '') {
-
-                    if (checkPassword(Contrasena)) {
-                        FuncCook(Nombre, Apellido, nick, Contrasena);
-                        MiFuncionRegistro(Nombre, Apellido, nick, Contrasena);
-                        
-                    } else { alert('Su contraseña no cumple nada') }
-                }
-                else {
-                    alert('Tienes algun espacio vacio')
-                }
-                
-            });
-                
-        });
-
-
-        function FuncCook(Nombre, Apellido, nick, Contrasena) {
-            alert('Entra')
-            var objJson = {
-                "Nombre": Nombre,
-                "Nick": nick,
-                "Pass": Contrasena,
-                "Apellido": Apellido
-                //"Password": password
-            }
-            var stringJson = JSON.stringify(objJson)
-
-            $.cookie('Micookie1', stringJson, { expires: 7 });
-            alert('Valor de la cookie =>' + $.cookie('Micookie1'))
-        }
-
-        function LeerCookie() {
-            if ($.cookie('Micookie1') != null || $.cookie('Micookie1') != '') {
-                var objCook = $.parseJSON($.cookie('Micookie1'));
-                $('#txtNick').val(objCook.Nick);
-                $('#txtPassword').val(objCook.Pass);
-                $('#txtLName').val(objCook.Apellido);
-                $('#txtName').val(objCook.Nombre);
-            }
-        }
-
-
-        function MiFuncionRegistro(Nombre, Apellido, nick, Contrasena) {
-            sha256(Contrasena);
-            var hashPwd = sha256.create();
-
-            var objJson = {
-                "Name": Nombre,
-                "Apellido": Apellido,
-                "Nick": nick,
-                "Password": hashPwd.hex()
-            }
-
-            var stringJson = JSON.stringify(objJson)
-            //alert(stringJson);
-
-            $.ajax({
-                url: "WSLogin.asmx/Registrar",
-                data: "{'user':" + stringJson + "}",
-                dataType: "json",
-                type: "POST",
-                contentType: "application/json; utf-8",
-                success: function (msg) {
-                    if (msg.d.Id > 0) {
-                        window.location.href = "Bienvenido.aspx";
-                    } else {
-                        alert('No existe usuario!!!');
-                    }
-                    //alert(msg.d.Name)
-                },
-                error: function (result) {
-                    alert("ERROR " + result.status + ' ' + result.statusText);
-                }
-            });
-        }
-
-        function checkPassword(str) {
-            var re = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z].{6,})/;
-            return re.test(str);
-        }
-
-
-    </script>
+    <script src="Scripts/main.js"></script>
     <title></title>
 </head>
 <body onload = "LeerCookie()"> 
@@ -119,7 +27,7 @@
         </div>
         <br />
         <div class="group">
-            <input type="button" id="btnLogin" value="Join" />
+            <input type="button" id="btnJoin" value="Join" />
             <br />
         </div>
     </form>
